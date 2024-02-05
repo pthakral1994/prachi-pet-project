@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace VirtualPet
 {
@@ -6,27 +6,18 @@ namespace VirtualPet
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Virtual Pet!");
-
-            Console.WriteLine("Choose a pet type (cat, dog, rabbit): ");
+            Console.WriteLine("Welcome to the Virtual Pet Simulator!");
+            Console.Write("Choose your pet type (Cat, Dog, Rabbit): ");
             string petType = Console.ReadLine()!;
-            Console.WriteLine("Enter a name for your pet: ");
+            Console.Write("What's your pet's name? ");
             string petName = Console.ReadLine()!;
 
             Pet myPet = new Pet(petType, petName);
+            Console.WriteLine($"\nWelcome {myPet.Name} the {myPet.Type} to your home!");
 
-            Console.WriteLine($"Congratulations! You have a new {myPet.PetType} named {myPet.PetName}.");
-
-            bool exit = false;
-            while (!exit)
+            while (true)
             {
-                Console.WriteLine("\nWhat would you like to do?");
-                Console.WriteLine("1. Feed");
-                Console.WriteLine("2. Play");
-                Console.WriteLine("3. Rest");
-                Console.WriteLine("4. Check pet status");
-                Console.WriteLine("5. Exit");
-
+                Console.WriteLine("\nChoose an action: \n1. Feed \n2. Play \n3. Rest \n4. Check Status \n5. Exit");
                 string choice = Console.ReadLine()!;
 
                 switch (choice)
@@ -42,107 +33,75 @@ namespace VirtualPet
                         break;
                     case "4":
                         myPet.CheckStatus();
-                        break;
+                        continue;
                     case "5":
-                        exit = true;
-                        break;
+                        Console.WriteLine("Goodbye!");
+                        return;
                     default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                        Console.WriteLine("Invalid choice. Please select a valid action.");
+                        continue;
                 }
 
-                myPet.PassTime();
-
-                if (myPet.Health <= 2)
-                {
-                    Console.WriteLine($"{myPet.PetName} is very sick. Take it to the vet!");
-                }
-
-                if (myPet.Hunger <= 2)
-                {
-                    Console.WriteLine($"{myPet.PetName} is starving. Feed it immediately!");
-                }
-
-                if (myPet.Happiness <= 2)
-                {
-                    Console.WriteLine($"{myPet.PetName} is very unhappy. Spend time with it!");
-                }
-
-                if (myPet.Hunger >= 8 || myPet.Happiness >= 8)
-                {
-                    Console.WriteLine($"{myPet.PetName} is too full or too happy. Be careful!");
-                }
+                myPet.TimePasses();
+                myPet.CheckStatus();
             }
+
         }
     }
 
     class Pet
     {
-        public string PetType { get; }
-        public string PetName { get; }
-        public int Hunger { get; private set; }
-        public int Happiness { get; private set; }
-        public int Health { get; private set; }
+        public string Type { get; private set; }
+        public string Name { get; private set; }
+        public int Hunger { get; private set; } = 5;
+        public int Happiness { get; private set; } = 5;
+        public int Health { get; private set; } = 5;
 
         public Pet(string type, string name)
         {
-            PetType = type;
-            PetName = name;
-            Hunger = 5;
-            Happiness = 5;
-            Health = 5;
+            Type = type;
+            Name = name;
         }
 
         public void Feed()
         {
-            Hunger -= 2;
-            Health++;
-            Console.WriteLine($"{PetName} is fed. Hunger decreased, and health improved.");
+            Hunger = Math.Max(1, Hunger - 2);
+            Health = Math.Min(10, Health + 1);
+            Console.WriteLine($"{Name} has been fed. Hunger decreased, health slightly increased.");
         }
 
         public void Play()
         {
-            if (Hunger >= 3)
-            {
-                Happiness += 2;
-                Hunger += 1;
-                Console.WriteLine($"{PetName} is playing. Happiness increased, but hunger also increased.");
-            }
-            else
-            {
-                Console.WriteLine($"{PetName} is too hungry to play. Feed it first!");
-            }
+            Happiness = Math.Min(10, Happiness + 2);
+            Hunger = Math.Min(10, Hunger + 1);
+            Console.WriteLine($"{Name} is happy playing. Happiness increased, hunger slightly increased.");
         }
 
         public void Rest()
         {
-            Health++;
-            Happiness--;
-            Console.WriteLine($"{PetName} is resting. Health improved, but happiness decreased.");
+            Health = Math.Min(10, Health + 2);
+            Happiness = Math.Max(1, Happiness - 1);
+            Console.WriteLine($"{Name} is resting. Health improved, happiness slightly decreased.");
+        }
+
+        public void TimePasses()
+        {
+            Hunger = Math.Min(10, Hunger + 1);
+            Happiness = Math.Max(1, Happiness - 1);
+            if (Hunger >= 8 || Happiness <= 2)
+            {
+                Health = Math.Max(1, Health - 1);
+                Console.WriteLine($"Warning: {Name} needs care. Health is deteriorating.");
+            }
         }
 
         public void CheckStatus()
         {
-            Console.WriteLine($"{PetName}'s Status:");
-            Console.WriteLine($"Hunger: {Hunger}/10");
-            Console.WriteLine($"Happiness: {Happiness}/10");
-            Console.WriteLine($"Health: {Health}/10");
-
-            if (Hunger <= 2 || Happiness <= 2 || Health <= 2)
-            {
-                Console.WriteLine("Warning: Some stats are critically low!");
-            }
-            else if (Hunger >= 8 || Happiness >= 8 || Health >= 8)
-            {
-                Console.WriteLine("Warning: Some stats are very high!");
-            }
+            Console.WriteLine($"\n{Name}'s Status: \nHunger: {Hunger}/10 \nHappiness: {Happiness}/10 \nHealth: {Health}/10");
+            if (Hunger >= 8) Console.WriteLine("Warning: Hunger is critically high, feed your pet soon.");
+            if (Happiness <= 2) Console.WriteLine("Warning: Happiness is critically low, play with your pet.");
+            if (Health <= 3) Console.WriteLine("Warning: Health is critically low, ensure your pet is well-fed and happy.");
         }
 
-        public void PassTime()
-        {
-            Hunger++;
-            Happiness--;
-            Console.WriteLine("Time passes. Hunger increased, and happiness decreased.");
-        }
     }
 }
