@@ -35,4 +35,8 @@ Follow these steps to set up and run the pet game on your PC using Visual Studio
 
 9. Run the Game: Again press F5 to run the game 
 Enjoy Your Game:
-Your pet game is now ready to play!
+Your pet game is now ready to play
+
+
+# Link of Youtube video to see how game is working: https://youtu.be/kroyEjU6wvc
+
