@@ -22,10 +22,10 @@ Follow these steps to set up and run the pet game on your PC using Visual Studio
    Launch Visual Studio on your machine.
 
 5. *Create new project :*
-   Create an new project using 'c#'  file structure .
+   Create an new project using 'c#' file structure .
 
 6. *Name your project  :*
-    A project will be created with your provide name ".
+    A project will be created with your provide name".
 
 7. *Run the project*
    Press F5 to run the project.
